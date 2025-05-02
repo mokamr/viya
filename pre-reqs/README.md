@@ -20,7 +20,7 @@ mkdir -p platform-gitops/sas-viya-scc/base
 
 ## 🔐 Create Aggregated Cluster Role
 
-Create a file `sas-admin-extended-rbac.yaml` under `platform-gitops/sas-viya-scc/base/`:
+Create a file `sas-extended-admin-rbac.yaml` under `platform-gitops/sas-viya-scc/base/`:
 
 ```bash
 cat << EOF > platform-gitops/sas-viya-scc/base/sas-extended-admin-rbac.yaml
