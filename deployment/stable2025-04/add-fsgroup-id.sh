@@ -12,6 +12,8 @@ fi
 # Assign the first argument as the namespace
 NS="$1"
 
+mkdir site-config/security
+
 # Copy the input file to the working location
 cp sas-bases/examples/security/container-security/configmap-inputs.yaml site-config/security/update-fsgroup-configmap.yaml
 
