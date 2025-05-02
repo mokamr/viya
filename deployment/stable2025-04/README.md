@@ -23,4 +23,14 @@ This script updates a Kubernetes ConfigMap YAML file with the appropriate `fsGro
 #### Usage
 
 ```bash
+cd viya/deployment/stable2025.04
 ./update-fsgroup.sh <namespace>
+```
+
+### Update SC names and NS from files in site-config
+```bash
+cd viya/deployment/stable2025.04
+./replace_placeholder.sh SC <RWO Storage Class Name>
+./replace_placeholder.sh NS <Viya NS>
+./replace_placeholder.sh RWXSC <RWX Storage Class Name>
+```
