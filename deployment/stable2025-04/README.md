@@ -39,6 +39,8 @@ cd viya/deployment/stable2025.04
 - Generate Viya 4 ingress certificates and private key then place them under site-config/security/
 - Naming convention of the certs and key should be ${viyaurl}.cer.txt and ${viyaurl}.key
 - Modify lines 7 and 8 in site-config/security/sas-custom-ingress-certificate-configmap.yaml with the path to the certificate and key files
+  ```yaml
   files:
   - tls.crt=site-config/security/${viyaurl}.cer.txt
   - tls.key=site-config/security/${viyaurl}.key
+```
