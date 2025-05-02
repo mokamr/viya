@@ -1,0 +1,8 @@
+---
+apiVersion: builtin
+kind: ConfigMapGenerator
+metadata:
+  name: sas-custom-ingress-certificate-configmap
+files:
+- tls.crt=site-config/security/${viyaurl}.cer.txt
+- tls.key=site-config/security/${viyaurl}.key

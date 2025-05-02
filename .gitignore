@@ -7,3 +7,5 @@ SASViyaV4*
 
 # Ignore kustomization.yaml under deployment deployment/stable2025-04
 deployment/stable2025-04/kustomization.yaml
+
+git-push.sh

@@ -1,0 +1,93 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: add-ingress-certificate-attrs
+patch: |-
+    - op: add
+      path: /spec/tls
+      value:
+        certificate: {}
+        key: {}
+        termination: reencrypt
+        insecureEdgeTerminationPolicy: Redirect
+target:
+  kind: Route
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: cas-add-ingress-certificate-attrs
+patch: |-
+    - op: add
+      path: /spec/routeTemplate/spec/tls
+      value:
+        certificate: {}
+        key: {}
+        termination: reencrypt
+        insecureEdgeTerminationPolicy: Redirect
+target:
+  group: viya.sas.com
+  kind: CASDeployment
+  name: .*
+  version: v1alpha1
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: distribute-ingress-certificate-cert
+replacements:
+- source:
+    kind: ConfigMap
+    name: sas-custom-ingress-certificate-configmap
+    fieldPath: data.[tls.crt]
+  targets:
+  - select:
+      kind: Route
+    fieldPaths:
+      - spec.tls.certificate
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: distribute-ingress-certificate-key
+replacements:
+- source:
+    kind: ConfigMap
+    name: sas-custom-ingress-certificate-configmap
+    fieldPath: data.[tls.key]
+  targets:
+  - select:
+      kind: Route
+    fieldPaths:
+      - spec.tls.key
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: cas-distribute-ingress-certificate-cert
+replacements:
+- source:
+    kind: ConfigMap
+    name: sas-custom-ingress-certificate-configmap
+    fieldPath: data.[tls.crt]
+  targets:
+  - select:
+      kind: CASDeployment
+    fieldPaths:
+      - spec.routeTemplate.spec.tls.certificate
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: cas-distribute-ingress-certificate-key
+replacements:
+- source:
+    kind: ConfigMap
+    name: sas-custom-ingress-certificate-configmap
+    fieldPath: data.[tls.key]
+  targets:
+  - select:
+      kind: CASDeployment
+    fieldPaths:
+      - spec.routeTemplate.spec.tls.key
