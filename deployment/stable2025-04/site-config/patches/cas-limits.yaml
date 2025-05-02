@@ -1,0 +1,26 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: cas-manage-cpu-and-memory
+patch: |-
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/0/resources/limits
+    value:
+      memory: 16Gi
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/0/resources/limits/cpu
+    value:
+      2
+  - op: replace
+    path: /spec/controllerTemplate/spec/containers/0/resources/requests/memory
+    value:
+      8Gi
+  - op: replace
+    path: /spec/controllerTemplate/spec/containers/0/resources/requests/cpu
+    value:
+      1
+target:
+  group: viya.sas.com
+  kind: CASDeployment
+  name: .*
+  version: v1alpha1
