@@ -1,0 +1,117 @@
+namespace: $NS
+
+resources:
+- sas-bases/base
+- sas-bases/overlays/network/route.openshift.io                            # using routes
+- sas-bases/overlays/cas-server
+- sas-bases/overlays/internal-elasticsearch                                # OpenDistro
+- sas-bases/overlays/postgres/platform-postgres                            # external postgres for platform
+- sas-bases/overlays/postgres/cds-postgres                                 # external postgres for risk
+# review
+#- site-config/security/update-fsgroup-configmap.yaml                       # update fsGroup value
+- site-config/resources/add-opendistro-pdb.yaml                            # kyverno: add PDB for OpenDistro
+- site-config/patches/mas-astore-pvc.yaml                                  # storage for MAS ASTORE models
+
+configurations:
+- sas-bases/overlays/required/kustomizeconfig.yaml
+
+transformers:
+- sas-bases/overlays/scaling/ha/enable-ha-transformer.yaml                 # kyverno: launch service with 2 instances
+- site-config/patches/add-ha-opendistro.yaml                               # kyverno: increase replicas for opendistro
+- site-config/patches/add-ha-data-server-colocated.yaml                    # kyverno: increase replicas for data server
+- site-config/patches/add-ha-deployments.yaml                              # kyverno: increase replicas for deployments
+- site-config/patches/add-pod-probes.yaml                                  # kyverno: add pod probes
+- site-config/patches/add-storageclassname.yaml                            # kyverno: add storageclass name
+- site-config/patches/add-topologyconstraints.yaml                         # kyverno: add topology constraints
+# review not using crunchy so no PGO?
+#- site-config/patches/add-resource-settings.yaml                           # kyverno: add resource settings
+- sas-bases/overlays/sas-microanalytic-score/astores/astores-transformer.yaml       # storage for MAS ASTORE models
+- site-config/patches/cas-limits.yaml                                      # no CAS nodepool
+- sas-bases/overlays/internal-elasticsearch/disable-mmap-transformer.yaml  # no memory mapping for OpenSearch
+- sas-bases/overlays/internal-elasticsearch/internal-elasticsearch-transformer.yaml # set env vars for OpenSearch
+- site-config/patches/opendistro-change-runuser.yaml                       # set user ID for OpenSearch to 1000
+- sas-bases/overlays/required/transformers.yaml                            # --------------------------------
+# review
+#- site-config/patches/quay-mirror.yaml                                     # use mirror registry
+- sas-bases/overlays/security/container-security/remove-seccomp-transformer.yaml    # remove seccomp profiles
+# review
+#- site-config/postgres/platform-dataserver-transformer.yaml                # external postgres for platform
+# review
+#- site-config/postgres/cds-dataserver-transformer.yaml                     # external postgres for CDS
+- sas-bases/overlays/security/container-security/update-fsgroup.yaml       # apply fsgroup changes
+- site-config/patches/add-pdb-label.yaml                                   # allows us to isolate PDBs
+- site-config/patches/set-cpu-limits.yaml                                  # reduces limits.cpu for most services
+# review
+#- site-config/patches/debug-scaledown.yaml                                 # reduce deployment to minimum set of services
+- site-config/patches/add-seccomp-sas-pyconfig.yaml                        # Add seccompProfile to sas-pyconfig CronJob
+- site-config/patches/distribute-ingress-certificate.yaml                  # inject TLS certificates to routes
+- sas-bases/overlays/sas-workload-orchestrator/enable-disable/sas-workload-orchestrator-disable-patch-transformer.yaml
+# review
+#- site-config/sas-risk-cirrus-rcc/core_transform.yaml                      # configuration for sas-risk-cirrus-core
+# review
+#- site-config/sas-risk-cirrus-mrm/mrm_transform.yaml                       # configuration for sas-risk-cirrus-mrm
+# review
+#- site-config/sas-risk-cirrus-rm/rm_transform.yaml                         # configuration for sas-risk-cirrus-rm
+- sas-bases/overlays/postgres/external-postgres/gcp-tls-transformer.yaml   # external postgres through proxy
+
+components:
+# Enable full-stack TLS
+- sas-bases/components/security/core/base/full-stack-tls
+- sas-bases/components/security/network/route.openshift.io/route/full-stack-tls
+
+generators:
+# review
+#- site-config/security/customer-provided-ingress-certificate.yaml
+#- site-config/security/customer-provided-ca-certificates.yaml
+# verify that cert details have been added
+- site-config/security/sas-custom-ingress-certificate-configmap.yaml # Used to distribute certs from configMap to Routes
+
+patches:
+- path: site-config/patches/rwx-storage-class.yaml
+  target:
+    kind: PersistentVolumeClaim
+    annotationSelector: sas.com/component-name in (sas-backup-job,sas-data-quality-services,sas-commonfiles,sas-cas-operator,sas-pyconfig,sas-risk-cirrus-core,sas-risk-cirrus-search)
+
+secretGenerator:
+# review
+# - name: sas-image-pull-secrets
+#   behavior: replace
+#   type: kubernetes.io/dockerconfigjson
+#   files:
+#   - .dockerconfigjson=site-config/security/quay_registry_access.json
+
+# review
+# - name: sas-consul-config
+#   behavior: merge
+#   files:
+#   - SITEDEFAULT_CONF=sitedefault.yaml
+
+# review
+# - name: sas-license
+#   type: sas.com/license
+#   behavior: merge
+#   files:
+#   - SAS_LICENSE=site-config/security/SASViyaV4_9CY3BM_1_lts_2024.09_license_2024-12-16T144214.jwt
+
+# review
+# - name: cds-postgres-user-env
+#   envs:
+#   - site-config/postgres/cds-postgres-user.env
+
+# - name: platform-postgres-user-env
+#   envs:
+#   - site-config/postgres/platform-postgres-user.env
+
+configMapGenerator:
+- name: input
+  behavior: merge
+  literals:
+  - IMAGE_REGISTRY=${mirrorurl}
+- name: ingress-input
+  behavior: merge
+  literals:
+  - INGRESS_HOST=${viyaurl}
+- name: sas-shared-config
+  behavior: merge
+  literals:
+  - SAS_SERVICES_URL=https://${viyaurl}
