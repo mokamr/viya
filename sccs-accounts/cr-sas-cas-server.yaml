@@ -1,0 +1,13 @@
+kind ClusterRole
+apiVersion rbac.authorization.k8s.iov1
+metadata
+  name 'systemopenshiftsccsas-cas-server'
+rules
+  - verbs
+      - use
+    apiGroups
+      - security.openshift.io
+    resources
+      - securitycontextconstraints
+    resourceNames
+      - sas-cas-server
