@@ -199,5 +199,10 @@ resources:
 EOF
 ```
 
+### Create the Manifest File
+```bash
+cd platform-gitops/sas-viya-scc/base
+kustomize build -o pre-reqs.yaml
+```
 
 
