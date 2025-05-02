@@ -1,0 +1,6 @@
+# Ignore sas-bases directory and everything inside it
+sas-bases/
+
+# Ignore specific deployment assets
+SASViyaV4*
+

@@ -1,0 +1,13 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: add-seccomp-to-sas-pyconfig-cronjob
+patch: |-
+  - op: add
+    path: /spec/jobTemplate/spec/template/spec/securityContext/seccompProfile
+    value:
+      type: RuntimeDefault
+target:
+  name: sas-pyconfig
+  kind: CronJob

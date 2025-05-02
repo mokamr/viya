@@ -1,0 +1,58 @@
+---
+# statefulsets do not declare storageClassName
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-storageclassname-statefulsets
+patch: |-
+  - op: add
+    path: /spec/volumeClaimTemplates/0/spec/storageClassName
+    value:
+      "$SC"
+target:
+  annotationSelector: sas.com/component-name in (sas-rabbitmq-server,sas-consul-server,sas-redis-server)
+  kind: StatefulSet
+---
+# opendistro does not declare storageClassName
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-storageclassname-opendistro
+patch: |-
+  - op: add
+    path: /spec/nodes/0/volume/storageClassName
+    value:
+      "$SC"
+target:
+  kind: OpenDistroCluster
+  name: sas-opendistro
+---
+# redis does not declare storageClassName
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-storageclassname-redis
+patch: |-
+  - op: add
+    path: /spec/storage
+    value:
+      class: "$SC"
+target:
+  kind: DistributedRedisCluster
+  name: sas-redis-server
+  version: v1alpha1
+  group: redis.kun
+---
+# risk pvcs that do not declare storageClassName
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-storageclassname-pvc
+patch: |-
+  - op: add
+    path: /spec/storageClassName
+    value:
+      "$SC"
+target:
+  name: sas-risk-.*
+  kind: PersistentVolumeClaim

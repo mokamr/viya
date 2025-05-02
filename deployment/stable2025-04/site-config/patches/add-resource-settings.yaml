@@ -1,0 +1,26 @@
+---
+# services which had identical liveness and readinessProbe probes
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-resource-settings
+patch: |-
+  - op: add
+    path: /spec/template/spec/containers/0/resources/limits
+    value:
+      memory: 500Mi
+  - op: add
+    path: /spec/template/spec/containers/0/resources/limits/cpu
+    value:
+      500m
+  - op: replace
+    path: /spec/template/spec/containers/0/resources/requests/memory
+    value:
+      50Mi
+  - op: replace
+    path: /spec/template/spec/containers/0/resources/requests/cpu
+    value:
+      50m
+target:
+  annotationSelector: app.kubernetes.io/name in (pgo)
+  kind: Deployment

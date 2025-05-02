@@ -1,0 +1,11 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-deployments-2-replicas
+patch: |-
+  - op: add
+    path: /spec/replicas
+    value: 2
+target:
+  kind: Deployment

@@ -1,0 +1,220 @@
+---
+# CAS server misses some probes
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-pod-probes-cas
+patch: |-
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/0/livenessProbe
+    value:
+      timeoutSeconds: 1
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/0/startupProbe
+    value:
+      timeoutSeconds: 3
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/1/livenessProbe
+    value:
+      timeoutSeconds: 1
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/1/readinessProbe
+    value:
+      timeoutSeconds: 2
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/1/startupProbe
+    value:
+      timeoutSeconds: 3
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/2/livenessProbe
+    value:
+      timeoutSeconds: 1
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/2/startupProbe
+    value:
+      timeoutSeconds: 3
+      exec:
+        command: ["true"]
+target:
+  group: viya.sas.com
+  kind: CASDeployment
+  name: .*
+  version: v1alpha1
+---
+# opendistro CR had no probes defined
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-pod-probes-opendistro
+patch: |-
+  - op: add
+    path: /spec/template/spec/containers/0/livenessProbe
+    value:
+      timeoutSeconds: 1
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/template/spec/containers/0/readinessProbe
+    value:
+      timeoutSeconds: 2
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/template/spec/containers/0/startupProbe
+    value:
+      timeoutSeconds: 3
+      exec:
+        command: ["true"]
+target:
+  kind: OpenDistroCluster
+  name: sas-opendistro
+---
+# services which had no probes defined
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-pod-probes-services
+patch: |-
+  - op: add
+    path: /spec/template/spec/containers/0/livenessProbe
+    value:
+      timeoutSeconds: 1
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/template/spec/containers/0/startupProbe
+    value:
+      timeoutSeconds: 2
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/template/spec/containers/0/readinessProbe
+    value:
+      timeoutSeconds: 3
+      exec:
+        command: ["true"]
+target:
+  kind: Deployment
+  annotationSelector: sas.com/component-name in (sas-opendistro-operator,sas-cas-operator,sas-prepull)
+---
+# statefulsets which had no probes defined
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-pod-probes-ss
+patch: |-
+  - op: add
+    path: /spec/template/spec/containers/0/livenessProbe
+    value:
+      timeoutSeconds: 1
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/template/spec/containers/0/startupProbe
+    value:
+      timeoutSeconds: 2
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/template/spec/containers/0/readinessProbe
+    value:
+      timeoutSeconds: 3
+      exec:
+        command: ["true"]
+target:
+  kind: StatefulSet
+  annotationSelector: sas.com/component-name in (sas-risk-cirrus-search)
+---
+# services which had identical liveness and readinessProbe probes
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-modify-pod-probes-deployments
+patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/1/readinessProbe/timeoutSeconds
+      value: 7
+target:
+  annotationSelector: sas.com/component-name in (sas-insights,sas-formats)
+  kind: Deployment
+---
+# services which had no probes defined for their 2nd container
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-pod-probes-services-2nd
+patch: |-
+  - op: add
+    path: /spec/template/spec/containers/1/livenessProbe
+    value:
+      timeoutSeconds: 1
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/template/spec/containers/1/startupProbe
+    value:
+      timeoutSeconds: 2
+      exec:
+        command: ["true"]
+  - op: add
+    path: /spec/template/spec/containers/1/readinessProbe
+    value:
+      timeoutSeconds: 3
+      exec:
+        command: ["true"]
+target:
+  kind: Deployment
+  annotationSelector: sas.com/component-name in (sas-risk-cirrus-core) 
+---
+# add. services which had identical liveness and readinessProbe probes
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-modify-pod-probes-sas-risk-deploy
+patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/readinessProbe/periodSeconds
+      value: 11
+target:
+  labelSelector: app.kubernetes.io/name in (sas-risk-cirrus-rcc,sas-risk-cirrus-mrm,sas-risk-cirrus-rm)
+  kind: Deployment
+---
+# podtemplates which had no probes defined
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-pod-probes-pt
+patch: |-
+  - op: add
+    path: /template/spec/containers/0/livenessProbe
+    value:
+      timeoutSeconds: 1
+      exec:
+        command: ["true"]
+  - op: add
+    path: /template/spec/containers/0/startupProbe
+    value:
+      timeoutSeconds: 2
+      exec:
+        command: ["true"]
+  - op: add
+    path: /template/spec/containers/0/readinessProbe
+    value:
+      timeoutSeconds: 3
+      exec:
+        command: ["true"]
+target:
+  kind: PodTemplate
+  annotationSelector: sas.com/component-name in (sas-batch,sas-compute)

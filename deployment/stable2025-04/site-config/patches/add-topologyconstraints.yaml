@@ -1,0 +1,73 @@
+---
+# add topologyconstraints to all deployments
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-topologyconstraint
+patch: |-
+    - op: add
+      path: /spec/template/spec/topologySpreadConstraints
+      value:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: ignored
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: ignored
+target:
+  kind: Deployment
+---
+# add topologyconstraints to all statefulsets
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-topologyconstraint-ss
+patch: |-
+    - op: add
+      path: /spec/template/spec/topologySpreadConstraints
+      value:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: ignored
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: ignored
+target:
+  kind: StatefulSet
+---
+# add topologyconstraints to opendistro CR
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: kyverno-add-topologyconstraint-opendistro
+patch: |-
+    - op: add
+      path: /spec/template/spec/topologySpreadConstraints
+      value:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: ignored
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: ignored
+target:
+  apiVersion: opendistro.sas.com/v1alpha1
+  kind: OpenDistroCluster

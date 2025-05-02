@@ -1,0 +1,12 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-data-server-2-replicas
+patch: |-
+  - op: add
+    path: /spec/replicas
+    value: 2
+target:
+  kind: StatefulSet
+  annotationSelector: sas.com/component-name in (sas-data-agent-server-colocated,sas-risk-cirrus-search)

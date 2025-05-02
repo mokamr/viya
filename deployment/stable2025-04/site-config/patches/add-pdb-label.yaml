@@ -1,0 +1,11 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-pdbs-add-label
+patch: |-
+  - op: add
+    path: /metadata/labels/ford.com~1k8s-type
+    value: PodDisruptionBudget
+target:
+  kind: PodDisruptionBudget
