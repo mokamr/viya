@@ -1,3 +1,11 @@
+# Getting Started
+## Ensure a valid 2025.04 Stable sas-bases folder is placed under viya/deployment/stable2025-04/
+## Run scripts to add missing HPAs and PDBs in sas-bases
+```bash
+cd viya/deployment/stable2025.04
+./add-hpa-missing.sh
+./add-pdb-missing.sh
+```
 ## Running Helper Scripts for Initial Setup
 
 ### Update fsGroup ConfigMap
