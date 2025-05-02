@@ -34,3 +34,8 @@ cd viya/deployment/stable2025.04
 ./replace_placeholder.sh NS <Viya NS>
 ./replace_placeholder.sh RWXSC <RWX Storage Class Name>
 ```
+### TLS
+#### Certificate Distribution to Routes (when cert-utils operator is unavailable)
+- Generate Viya 4 ingress certificates and private key then place them under site-config/security/
+- Naming convention of the certs and key should be ${viyaurl}.cer.txt and ${viyaurl}.key
+- Modify lines 7 and 8 in site-config/security/sas-custom-ingress-certificate-configmap.yaml with the path to the certificate and key files 
