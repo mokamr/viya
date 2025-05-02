@@ -23,7 +23,7 @@ mkdir -p platform-gitops/sas-viya-scc/base
 Create a file `sas-admin-extended-rbac.yaml` under `platform-gitops/sas-viya-scc/base/`:
 
 ```bash
-cat << EOF > platform-gitops/sas-viya-scc/base/sas-admin-extended-rbac.yaml
+cat << EOF > platform-gitops/sas-viya-scc/base/sas-extended-admin-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
