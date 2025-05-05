@@ -27,13 +27,13 @@ declare -A component_perms=(
 
 # Set permissions
 for component in "${!component_perms[@]}"; do
-  file="sas-bases/base/components/${component}/resources.yaml"
+  file="../sas-bases/base/components/${component}/resources.yaml"
   set_permission_if_needed "$file" "${component_perms[$component]}"
 done
 
 # Append HPA only if not already present
 createhpa() {
-  file="sas-bases/base/components/${component}/resources.yaml"
+  file="../sas-bases/base/components/${component}/resources.yaml"
   if grep -q "kind: HorizontalPodAutoscaler" "$file"; then
     echo "HPA already exists in $file"
     return

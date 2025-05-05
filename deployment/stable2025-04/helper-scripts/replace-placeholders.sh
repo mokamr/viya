@@ -26,7 +26,7 @@ case "$PLACEHOLDER" in
 esac
 
 # Find and replace in YAML files
-find site-config/ -type f -name "*.yaml" -print0 | while IFS= read -r -d '' file; do
+find ../site-config/ -type f -name "*.yaml" -print0 | while IFS= read -r -d '' file; do
   sed -i "s/\\\$$PLACEHOLDER/$VALUE/g" "$file"
   echo "Updating $file for \$$PLACEHOLDER"
 done

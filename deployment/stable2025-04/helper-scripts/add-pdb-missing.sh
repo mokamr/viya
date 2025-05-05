@@ -19,7 +19,7 @@ set_permission_if_needed() {
 
 # Function to append PDB if not already present
 createpdb() {
-  local file="sas-bases/base/components/${component}/resources.yaml"
+  local file="../sas-bases/base/components/${component}/resources.yaml"
   if grep -q "kind: PodDisruptionBudget" "$file"; then
     echo "PDB already exists in $file"
     return
@@ -66,7 +66,7 @@ components=(
 
 # Loop over components
 for component in "${components[@]}"; do
-  file="sas-bases/base/components/${component}/resources.yaml"
+  file="../sas-bases/base/components/${component}/resources.yaml"
   set_permission_if_needed "$file" 664
   createpdb
 done

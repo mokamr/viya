@@ -13,13 +13,13 @@ fi
 NS="$1"
 
 # Only create the security directory if it doesn't exist
-if [ ! -d "site-config/security" ]; then
-  mkdir -p site-config/security
+if [ ! -d "../site-config/security" ]; then
+  mkdir -p ../site-config/security
 fi
 
 
 # Copy the input file to the working location
-cp sas-bases/examples/security/container-security/configmap-inputs.yaml site-config/security/update-fsgroup-configmap.yaml
+cp ../sas-bases/examples/security/container-security/configmap-inputs.yaml site-config/security/update-fsgroup-configmap.yaml
 
 # Retrieve the fsGroup value from the namespace annotations
 FSGROUP=$(oc get project "$NS" -o jsonpath='{.metadata.annotations.openshift\.io/sa\.scc\.supplemental-groups}' | cut -f1 -d /)
@@ -33,4 +33,4 @@ fi
 echo "Using FSGROUP: $FSGROUP"
 
 # Substitute placeholder with actual fsGroup
-sed -i "s|{{ FSGROUP_VALUE }}|$FSGROUP|" site-config/security/update-fsgroup-configmap.yaml
+sed -i "s|{{ FSGROUP_VALUE }}|$FSGROUP|" ../site-config/security/update-fsgroup-configmap.yaml
