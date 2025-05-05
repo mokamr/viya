@@ -111,7 +111,7 @@ This cluster role grants extended permissions required for SAS Viya workloads an
 
 Download the following CRDs from:
 
-📁 GitHub Repo: [mokamr/viya — crds/stable-2025-04](https://github.com/mokamr/viya/tree/main/crds/stable-2025-04)
+📁 GitHub Repo: [mokamr/viya — crds/stable-2025-04](https://github.com/mokamr/viya/tree/main/pre-reqs/crds/stable-2025-04)
 
 Place them in:
 
@@ -125,7 +125,7 @@ platform-gitops/sas-viya-scc/base/
 
 Download the following SCC and role binding manifests from:
 
-📁 GitHub Repo: [mokamr/viya — sccs-accounts](https://github.com/mokamr/viya/tree/main/sccs-accounts)
+📁 GitHub Repo: [mokamr/viya — sccs-accounts](https://github.com/mokamr/viya/tree/main/pre-reqs/sccs-accounts)
 
 Place them in:
 
