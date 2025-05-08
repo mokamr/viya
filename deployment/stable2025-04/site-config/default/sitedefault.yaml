@@ -1,0 +1,76 @@
+config:
+    application:
+        sas.identities.providers.ldap.connection:
+            host: '...'
+            port: '...'
+            url: '...'
+            userDN: '...'
+            password: '...'
+            anonymousBind: 'false'
+        sas.identities.providers.ldap.group:
+            accountId: '...'
+            baseDN: '...'
+            createdDate: '...'
+            distinguishedName: '...'
+            member: '...'
+            memberOf: '...'
+            modifiedDate: '...'
+            objectClass: '...'
+            objectFilter: '...'
+            searchFilter: '...'
+        sas.identities.providers.ldap.user:
+            accountId: '...'
+            baseDN: '...'
+            createdDate: '...'
+            distinguishedName: '...'
+            memberOf: 'none'
+            modifiedDate: '...'
+            objectClass: '...'
+            objectFilter: '...'
+            searchFilter: '...'
+        sas.identities.providers.ldap:
+            primaryGroupMembershipsEnabled: 'true'
+        sas.identities:
+            administrator: '...'
+            identifier.disableGids: 'false'
+            identifier.generateGids: 'false'
+            identifier.generateUids: 'false'
+        # sas.logon.initial:
+        #     user: 'sasboot'
+        #     password: 'lnxsas'
+        sas.commons.web.security.cors:
+            allowCredentials: 'true'
+            allowedHeaders: '*'
+            allowedMethods: '*'
+            allowedOrigins: '*'
+        sas.commons.web.security.csrf:
+            allowedUris: '.*'
+            failIfNoHeaders: 'false'
+        sas.studio:
+            fileNavigationRoot: 'SYSTEM'
+            showServerFiles: 'true'
+            allowGit: 'true'
+            allowGitPassword: 'true'
+            allowGitSSHPassword: 'true'
+            allowGitSSLCertFilepath: 'true'
+    compute:
+        sas.compute.server:
+            autoexec_code:
+                contents: |
+                    LOCKDOWN ENABLE_AMS=PYTHON;
+                    LOCKDOWN ENABLE_AMS=PYTHON_EMBED;
+                    LOCKDOWN ENABLE_AMS=SOCKET;
+            configuration_options:
+                contents: |
+                    -RLANG
+    batch:
+        sas.batch.server:
+            autoexec_code:
+                contents: |
+                    LOCKDOWN ENABLE_AMS=PYTHON;
+                    LOCKDOWN ENABLE_AMS=PYTHON_EMBED;
+                    LOCKDOWN ENABLE_AMS=SOCKET;
+            configuration_options:
+                contents: |
+                    -RLANG
+

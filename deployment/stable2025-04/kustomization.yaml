@@ -80,11 +80,10 @@ secretGenerator:
 #   files:
 #   - .dockerconfigjson=site-config/security/quay_registry_access.json
 
-# review
-# - name: sas-consul-config
-#   behavior: merge
-#   files:
-#   - SITEDEFAULT_CONF=sitedefault.yaml
+- name: sas-consul-config
+  behavior: merge
+  files:
+  - SITEDEFAULT_CONF=site-config/default/sitedefault.yaml
 
 # review
 # - name: sas-license
